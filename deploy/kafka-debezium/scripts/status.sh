@@ -11,8 +11,8 @@ if command -v sh >/dev/null 2>&1; then
 fi
 
 echo
-printf '==> connect health: '
-if curl -fsS "$CONNECT_URL/connectors" >/dev/null; then
+printf '==> Kafka Connect health: '
+if curl -fsS "$CONNECT_URL/connectors" >/dev/null 2>&1; then
   echo "ok"
   curl -fsS "$CONNECT_URL/connectors"
 else
@@ -20,8 +20,8 @@ else
 fi
 
 echo
-printf '==> clickhouse health: '
-if curl -fsS "$CLICKHOUSE_URL/ping" >/dev/null; then
+printf '==> ClickHouse HTTP health: '
+if curl -fsS "$CLICKHOUSE_URL/ping" >/dev/null 2>&1; then
   echo "ok"
   curl -fsS "$CLICKHOUSE_URL/ping"
 else
@@ -29,8 +29,8 @@ else
 fi
 
 echo
-printf '==> kafka-ui health: '
-if curl -fsS "http://127.0.0.1:${HOST_KAFKA_UI_PORT:-8088}" >/dev/null; then
+printf '==> Kafka UI health: '
+if curl -fsS "http://127.0.0.1:${HOST_KAFKA_UI_PORT:-8088}" >/dev/null 2>&1; then
   echo "ok"
 else
   echo "unreachable"

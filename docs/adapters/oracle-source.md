@@ -109,7 +109,7 @@ LogMiner needs at least **3 redo log groups** and ideally **200MB+ per group** f
 
 ## Connector config
 
-File: [`connectors/oracle-source.json.example`](connectors/oracle-source.json.example)
+File: `deploy/kafka-debezium/connectors/oracle-source.json.example`
 
 Rename to `oracle-source.json` and set the environment variables in `.env`:
 
