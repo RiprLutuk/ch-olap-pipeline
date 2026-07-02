@@ -7,3 +7,6 @@ vendor/
 .idea/
 .vscode/
 *.swp
+
+# generated docs
+site/
