@@ -1,0 +1,14 @@
+{
+  "name": "sqlserver-source",
+  "config": {
+    "connector.class": "io.debezium.connector.sqlserver.SqlServerConnector",
+    "database.hostname": "${MSSQL_HOST}",
+    "database.port": "${MSSQL_PORT}",
+    "database.user": "${MSSQL_USER}",
+    "database.password": "${MSSQL_PASSWORD}",
+    "database.names": "${MSSQL_DB}",
+    "topic.prefix": "${TOPIC_PREFIX}",
+    "table.include.list": "${MSSQL_TABLE_INCLUDE}",
+    "include.schema.changes": "false"
+  }
+}
