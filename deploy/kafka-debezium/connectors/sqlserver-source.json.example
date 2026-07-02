@@ -1,0 +1,9 @@
+{
+  "name": "sqlserver-source",
+  "config": {
+    "connector.class": "io.debezium.connector.sqlserver.SqlServerConnector",
+    "tasks.max": "1",
+    "topic.prefix": "${TOPIC_PREFIX:-oltpdemo}",
+    "table.include.list": "${SQLSERVER_TABLE_INCLUDE}"
+  }
+}

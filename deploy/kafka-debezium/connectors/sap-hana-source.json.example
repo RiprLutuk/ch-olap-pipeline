@@ -1,0 +1,9 @@
+{
+  "name": "sap-hana-source",
+  "config": {
+    "connector.class": "com.example.kafka.connect.saphana.SapHanaConnector",
+    "tasks.max": "1",
+    "topic.prefix": "${TOPIC_PREFIX:-oltpdemo}",
+    "table.include.list": "${SAP_HANA_TABLE_INCLUDE}"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "webhook-sink",
+  "config": {
+    "connector.class": "com.example.kafka.connect.webhook.WebhookSinkConnector",
+    "tasks.max": "1",
+    "topics.regex": "${TOPICS_REGEX:-oltpdemo\\..*}"
+  }
+}

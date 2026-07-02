@@ -1,0 +1,9 @@
+{
+  "name": "firebird-source",
+  "config": {
+    "connector.class": "com.example.kafka.connect.firebird.FirebirdConnector",
+    "tasks.max": "1",
+    "topic.prefix": "${TOPIC_PREFIX:-oltpdemo}",
+    "table.include.list": "${FIREBIRD_TABLE_INCLUDE}"
+  }
+}

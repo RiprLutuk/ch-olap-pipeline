@@ -1,0 +1,152 @@
+name: CI
+
+on:
+  push:
+    branches: [main, feature/kafka-debezium-architecture]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext-base jq python3-yaml shellcheck
+          python3 -m pip install mkdocs
+          python3 --version
+          shellcheck --version
+
+      - name: Validate shell scripts syntax and style
+        run: |
+          set -euo pipefail
+          bash -n deploy/kafka-debezium/scripts/register-connectors.sh
+          bash -n deploy/kafka-debezium/scripts/status.sh
+          shellcheck deploy/kafka-debezium/scripts/register-connectors.sh deploy/kafka-debezium/scripts/status.sh
+
+      - name: Validate connector JSON syntax
+        run: |
+          set -euo pipefail
+          for f in deploy/kafka-debezium/connectors/*.json deploy/kafka-debezium/connectors/*.json.example; do
+            echo "checking $f"
+            python3 -m json.tool "$f" >/dev/null
+          done
+
+      - name: Validate connector JSON templates render cleanly
+        env:
+          PG_HOST: localhost
+          PG_PORT: "5432"
+          PG_USER: postgres
+          PG_PASSWORD: postgres
+          PG_DB: postgres
+          PG_TABLE_INCLUDE: public.orders
+          MYSQL_HOST: localhost
+          MYSQL_PORT: "3306"
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+          MYSQL_DB: app
+          MYSQL_TABLE_INCLUDE: app.orders
+          MSSQL_HOST: localhost
+          MSSQL_PORT: "1433"
+          MSSQL_USER: sa
+          MSSQL_PASSWORD: Password123!
+          MSSQL_DB: app
+          MSSQL_TABLE_INCLUDE: dbo.orders
+          TOPIC_PREFIX: oltpdemo
+        run: |
+          set -euo pipefail
+          for f in deploy/kafka-debezium/connectors/*.json; do
+            echo "rendering $f"
+            envsubst < "$f" | python3 -m json.tool >/dev/null
+          done
+
+      - name: Validate missing env guard
+        run: |
+          set -euo pipefail
+          cd deploy/kafka-debezium
+          if env -i PATH="$PATH" HOME="$HOME" bash -lc './scripts/register-connectors.sh' >/tmp/missing-env.out 2>&1; then
+            echo "Expected register-connectors.sh to fail when env vars are missing"
+            cat /tmp/missing-env.out
+            exit 1
+          fi
+          grep -q "required environment variables are missing or empty" /tmp/missing-env.out
+
+      - name: Validate compose file structure
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import yaml, pathlib
+          p = pathlib.Path('deploy/kafka-debezium/docker-compose.yml')
+          data = yaml.safe_load(p.read_text())
+          assert 'services' in data and isinstance(data['services'], dict) and data['services'], 'services missing'
+          required = ['kafka', 'connect', 'clickhouse']
+          missing = [s for s in required if s not in data['services']]
+          assert not missing, f'missing required services: {missing}'
+          print('compose structure ok')
+          PY
+
+      - name: Dry-run connector registration rendering
+        env:
+          PG_HOST: localhost
+          PG_PORT: "5432"
+          PG_USER: postgres
+          PG_PASSWORD: postgres
+          PG_DB: postgres
+          PG_TABLE_INCLUDE: public.orders
+          MYSQL_HOST: localhost
+          MYSQL_PORT: "3306"
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+          MYSQL_DB: app
+          MYSQL_TABLE_INCLUDE: app.orders
+          MSSQL_HOST: localhost
+          MSSQL_PORT: "1433"
+          MSSQL_USER: sa
+          MSSQL_PASSWORD: Password123!
+          MSSQL_DB: app
+          MSSQL_TABLE_INCLUDE: dbo.orders
+          TOPIC_PREFIX: oltpdemo
+          DRY_RUN: "1"
+        run: |
+          set -euo pipefail
+          cd deploy/kafka-debezium
+          ./scripts/register-connectors.sh | tee /tmp/dry-run.out
+          grep -q 'rendering mysql-source.json' /tmp/dry-run.out
+          grep -q 'rendering postgres-source.json' /tmp/dry-run.out
+          grep -q 'rendering sqlserver-source.json' /tmp/dry-run.out
+
+      - name: Validate status script smoke test
+        run: |
+          set -euo pipefail
+          cd deploy/kafka-debezium
+          COMPOSE=true ./scripts/status.sh >/tmp/status.out
+          grep -q 'Kafka Connect' /tmp/status.out
+          grep -q 'ClickHouse HTTP' /tmp/status.out
+
+      - name: Build docs strictly
+        run: |
+          set -euo pipefail
+          python3 -m mkdocs build --clean --strict
+
+      - name: Validate docs presence
+        run: |
+          set -euo pipefail
+          test -f README.md
+          test -f CONTRIBUTING.md
+          test -f CODE_OF_CONDUCT.md
+          test -f SECURITY.md
+          test -f docs/open-source-vision.md
+          test -f docs/supported-rdbms-matrix.md
+          test -f docs/architecture-decisions.md
+          test -f docs/adapters/postgres-source.md
+          test -f docs/adapters/mysql-source.md
+          test -f docs/adapters/sqlserver-source.md
+          test -f docs/adapters/oracle-source.md
+          test -f docs/adapters/mariadb-source.md
+          test -f deploy/kafka-debezium/README.md
+          echo 'docs present'

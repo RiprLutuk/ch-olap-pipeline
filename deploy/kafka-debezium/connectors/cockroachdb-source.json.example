@@ -1,0 +1,9 @@
+{
+  "name": "cockroachdb-source",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+    "topic.prefix": "${TOPIC_PREFIX:-oltpdemo}",
+    "table.include.list": "${COCKROACHDB_TABLE_INCLUDE}"
+  }
+}

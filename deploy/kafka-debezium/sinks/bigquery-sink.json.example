@@ -1,0 +1,8 @@
+{
+  "name": "bigquery-sink",
+  "config": {
+    "connector.class": "com.example.kafka.connect.bigquery.BigquerySinkConnector",
+    "tasks.max": "1",
+    "topics.regex": "${TOPICS_REGEX:-oltpdemo\\..*}"
+  }
+}

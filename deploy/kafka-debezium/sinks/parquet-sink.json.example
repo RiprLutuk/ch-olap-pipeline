@@ -1,0 +1,8 @@
+{
+  "name": "parquet-sink",
+  "config": {
+    "connector.class": "com.example.kafka.connect.parquet.ParquetSinkConnector",
+    "tasks.max": "1",
+    "topics.regex": "${TOPICS_REGEX:-oltpdemo\\..*}"
+  }
+}

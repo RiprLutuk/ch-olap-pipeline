@@ -1,0 +1,9 @@
+{
+  "name": "kafka-source",
+  "config": {
+    "connector.class": "org.apache.kafka.connect.mirror.MirrorSourceConnector",
+    "tasks.max": "1",
+    "topic.prefix": "${TOPIC_PREFIX:-oltpdemo}",
+    "table.include.list": "${KAFKA_TABLE_INCLUDE}"
+  }
+}

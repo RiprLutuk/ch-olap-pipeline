@@ -1,0 +1,9 @@
+{
+  "name": "oracle-source",
+  "config": {
+    "connector.class": "io.debezium.connector.oracle.OracleConnector",
+    "tasks.max": "1",
+    "topic.prefix": "${TOPIC_PREFIX:-oltpdemo}",
+    "table.include.list": "${ORACLE_TABLE_INCLUDE}"
+  }
+}

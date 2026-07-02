@@ -1,0 +1,9 @@
+{
+  "name": "vitess-source",
+  "config": {
+    "connector.class": "io.debezium.connector.vitess.VitessConnector",
+    "tasks.max": "1",
+    "topic.prefix": "${TOPIC_PREFIX:-oltpdemo}",
+    "table.include.list": "${VITESS_TABLE_INCLUDE}"
+  }
+}

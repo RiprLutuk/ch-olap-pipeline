@@ -1,0 +1,45 @@
+site_name: CH OLAP Pipeline
+site_description: Community OLTP to OLAP pipeline for DBA, infra, and data-platform engineers.
+repo_url: https://github.com/RiprLutuk/ch-olap-pipeline
+repo_name: RiprLutuk/ch-olap-pipeline
+theme:
+  name: mkdocs
+nav:
+  - Home: index.md
+  - Vision: open-source-vision.md
+  - Architecture Decisions: architecture-decisions.md
+  - Sources: supported-rdbms-matrix.md
+  - Sinks: sinks-matrix.md
+  - Source Adapters:
+      - PostgreSQL: adapters/postgres-source.md
+      - MySQL: adapters/mysql-source.md
+      - MariaDB: adapters/mariadb-source.md
+      - SQL Server: adapters/sqlserver-source.md
+      - Oracle: adapters/oracle-source.md
+      - Db2: adapters/db2-source.md
+      - CockroachDB: adapters/cockroachdb-source.md
+      - YugabyteDB: adapters/yugabyte-source.md
+      - Vitess: adapters/vitess-source.md
+      - MongoDB: adapters/mongodb-source.md
+      - SQLite: adapters/sqlite-source.md
+      - Firebird: adapters/firebird-source.md
+      - SAP HANA: adapters/sap-hana-source.md
+      - Kafka-native: adapters/kafka-source.md
+      - REST/Webhook: adapters/rest-source.md
+  - Sink Targets:
+      - ClickHouse: sinks/clickhouse-sink.md
+      - Kafka: sinks/kafka-sink.md
+      - S3: sinks/s3-sink.md
+      - Iceberg: sinks/iceberg-sink.md
+      - Delta: sinks/delta-sink.md
+      - BigQuery: sinks/bigquery-sink.md
+      - Snowflake: sinks/snowflake-sink.md
+      - Redshift: sinks/redshift-sink.md
+      - PostgreSQL: sinks/postgres-sink.md
+      - MySQL: sinks/mysql-sink.md
+      - Elasticsearch: sinks/elasticsearch-sink.md
+      - OpenSearch: sinks/opensearch-sink.md
+      - DuckDB: sinks/duckdb-sink.md
+      - Parquet: sinks/parquet-sink.md
+      - Webhook: sinks/webhook-sink.md
+      - RabbitMQ: sinks/rabbitmq-sink.md

@@ -1,0 +1,27 @@
+{
+  "name": "shop-mysql-source",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "tasks.max": "1",
+    "database.hostname": "mysql",
+    "database.port": "3306",
+    "database.user": "shop",
+    "database.password": "shop",
+    "database.server.id": "184054",
+    "topic.prefix": "shop_mysql",
+    "schema.include.list": "shop",
+    "table.include.list": "shop.customers,shop.products,shop.orders,shop.order_items",
+    "time.precision.mode": "connect",
+    "decimal.handling.mode": "double",
+    "tombstones.on.delete": "false",
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "true",
+    "transforms.unwrap.delete.handling.mode": "rewrite",
+    "transforms.unwrap.add.fields": "op,source.ts_ms",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
+  }
+}

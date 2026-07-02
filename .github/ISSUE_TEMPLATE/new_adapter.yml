@@ -1,0 +1,66 @@
+name: New source database adapter
+description: Propose support for a new RDBMS source
+title: "adapter: add <database> source"
+labels: ["adapter", "source-db", "needs-triage"]
+body:
+  - type: input
+    id: db
+    attributes:
+      label: Database engine
+      placeholder: Oracle, Db2, MariaDB, CockroachDB, Firebird, SAP HANA, ...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version(s)
+      placeholder: 19c, 21c, 11.5, 10.6, ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: cdc_mechanism
+    attributes:
+      label: CDC mechanism
+      description: How does this DB expose changes?
+      placeholder: WAL / binlog / native CDC / LogMiner / changefeeds / triggers / unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: connector_path
+    attributes:
+      label: Proposed connector path
+      description: Debezium connector? Kafka Connect JDBC? Custom bridge?
+      placeholder: Debezium Oracle connector using LogMiner...
+    validations:
+      required: true
+
+  - type: textarea
+    id: db_setup
+    attributes:
+      label: Required DB-side setup
+      description: Privileges, config flags, CDC enablement, restart requirements.
+      placeholder: |
+        GRANT ...
+        ALTER SYSTEM ...
+        restart required: yes/no
+    validations:
+      required: false
+
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Known limitations / caveats
+      description: Licensing, performance, log retention, schema evolution, unsupported data types.
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Official docs, Debezium docs, blogs, demos.
+    validations:
+      required: false
