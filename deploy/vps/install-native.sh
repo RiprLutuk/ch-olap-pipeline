@@ -24,8 +24,10 @@ Environment overrides before running:
   CMS_CLICKHOUSE_URL       default http://127.0.0.1:8123
   CMS_CLICKHOUSE_USER      default analytics
   CMS_CLICKHOUSE_PASSWORD  default analytics
+  CMS_GENERATOR_URL        default http://127.0.0.1:8085
   CMS_PG_DSN               optional external Postgres DSN
   CMS_MYSQL_DSN            optional external MySQL DSN
+  GEN_HTTP_ADDR            default :8085
   GEN_PG_DSN               optional external Postgres DSN
   GEN_MYSQL_DSN            optional external MySQL DSN
   GEN_TICK_MS              default 1000
@@ -89,7 +91,7 @@ fi
 
 cat >/etc/ch-olap/cms.env <<EOF
 CMS_HTTP_ADDR=:8084
-CMS_GENERATOR_URL=http://127.0.0.1:8081
+CMS_GENERATOR_URL=${CMS_GENERATOR_URL:-http://127.0.0.1:8085}
 CMS_CLICKHOUSE_URL=${CMS_CLICKHOUSE_URL:-http://127.0.0.1:8123}
 CMS_CLICKHOUSE_USER=${CMS_CLICKHOUSE_USER:-analytics}
 CMS_CLICKHOUSE_PASSWORD=${CMS_CLICKHOUSE_PASSWORD:-analytics}
@@ -99,7 +101,7 @@ EOF
 chmod 0600 /etc/ch-olap/cms.env
 
 cat >/etc/ch-olap/gen.env <<EOF
-GEN_HTTP_ADDR=:8081
+GEN_HTTP_ADDR=${GEN_HTTP_ADDR:-:8085}
 GEN_TICK_MS=${GEN_TICK_MS:-1000}
 GEN_WORKERS=${GEN_WORKERS:-2}
 GEN_PG_DSN=${GEN_PG_DSN:-postgres://shop:shop@127.0.0.1:5432/shop?sslmode=disable}
