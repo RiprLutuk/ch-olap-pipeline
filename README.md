@@ -2,6 +2,8 @@
 
 > A practical open-source **OLTP → OLAP** data pipeline built around **real Change Data Capture (CDC)**, designed for the many real-world cases where you are stuck with **heterogeneous RDBMS** sources and need a clean, **observable** path into **ClickHouse** for analytics.
 
+[![CI](https://github.com/RiprLutuk/ch-olap-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/RiprLutuk/ch-olap-pipeline/actions/workflows/ci.yml)
+[![Docs](https://github.com/RiprLutuk/ch-olap-pipeline/actions/workflows/pages.yml/badge.svg)](https://github.com/RiprLutuk/ch-olap-pipeline/actions/workflows/pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Go](https://img.shields.io/badge/Go-1.22+-00ADD8?logo=go&logoColor=white)](https://golang.org)
 [![Debezium](https://img.shields.io/badge/Debezium-2.7-blueviolet)](https://debezium.io)

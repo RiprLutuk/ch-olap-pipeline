@@ -3,8 +3,22 @@ site_description: Universal OLTP to OLAP CDC pipeline with Debezium, Kafka, and 
 site_url: https://riprlutuk.github.io/ch-olap-pipeline/
 repo_url: https://github.com/RiprLutuk/ch-olap-pipeline
 repo_name: RiprLutuk/ch-olap-pipeline
+
+docs_dir: .
+site_dir: /tmp/ch-olap-pipeline-site
+
+exclude_docs: |
+  .git
+  .github
+  archive
+  deploy
+  site
+  .site
+  /tmp
+
 theme:
   name: mkdocs
+
 nav:
   - Home: README.md
   - Open Source Vision: docs/open-source-vision.md
@@ -13,6 +27,7 @@ nav:
   - Oracle Source Adapter: docs/adapters/oracle-source.md
   - Contributing: CONTRIBUTING.md
   - Security: SECURITY.md
+
 markdown_extensions:
   - tables
   - toc:
