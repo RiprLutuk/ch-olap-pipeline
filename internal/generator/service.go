@@ -30,25 +30,29 @@ type Config struct {
 
 // Service is the long-running generator.
 type Service struct {
-	cfg    Config
-	pools  map[db.Target]*db.Pool
-	mu     sync.RWMutex
-	stopCh chan struct{}
+	cfg   Config
+	pools map[db.Target]*db.Pool
+	mu    sync.RWMutex
+
+	running bool
+	cancel  context.CancelFunc
 }
 
 // NewService wires the generator against the supplied pools.
 func NewService(cfg Config, pools map[db.Target]*db.Pool) *Service {
-	return &Service{
-		cfg:    cfg,
-		pools:  pools,
-		stopCh: make(chan struct{}),
-	}
+	return &Service{cfg: cfg, pools: pools}
 }
 
 // Start launches the worker goroutines. Idempotent: subsequent calls are no-op.
 func (s *Service) Start(ctx context.Context) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	if s.running {
+		return
+	}
+	workerCtx, cancel := context.WithCancel(ctx)
+	s.cancel = cancel
+	s.running = true
 
 	for _, t := range s.cfg.Targets {
 		pool, ok := s.pools[t]
@@ -59,19 +63,30 @@ func (s *Service) Start(ctx context.Context) {
 		for w := 0; w < s.cfg.Workers; w++ {
 			workerID := w
 			target := t
-			go s.runWorker(ctx, pool, target, workerID)
+			go s.runWorker(workerCtx, pool, target, workerID)
 		}
 	}
 }
 
 // Stop signals all workers to exit.
 func (s *Service) Stop() {
-	select {
-	case <-s.stopCh:
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if !s.running {
 		return
-	default:
-		close(s.stopCh)
 	}
+	if s.cancel != nil {
+		s.cancel()
+	}
+	s.running = false
+	s.cancel = nil
+}
+
+// IsRunning returns true when generator workers are active.
+func (s *Service) IsRunning() bool {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.running
 }
 
 func (s *Service) runWorker(ctx context.Context, pool *db.Pool, target db.Target, id int) {
@@ -82,8 +97,7 @@ func (s *Service) runWorker(ctx context.Context, pool *db.Pool, target db.Target
 	for {
 		select {
 		case <-ctx.Done():
-			return
-		case <-s.stopCh:
+			log.Printf("generator: worker %d/%s stopped", id, target)
 			return
 		case <-t.C:
 			if err := s.tick(ctx, pool, target); err != nil {

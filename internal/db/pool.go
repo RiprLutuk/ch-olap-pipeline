@@ -39,7 +39,6 @@ func New(ctx context.Context, target Target, dsn string) (*Pool, error) {
 	if err != nil {
 		return nil, fmt.Errorf("open %s: %w", target, err)
 	}
-	// Sensible defaults; tune via env later.
 	db.SetMaxOpenConns(16)
 	db.SetMaxIdleConns(4)
 	db.SetConnMaxLifetime(30 * time.Minute)
