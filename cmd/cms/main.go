@@ -47,6 +47,12 @@ type dashboardData struct {
 	Orders         []orderRow
 	Message        string
 	Error          string
+	Search         string
+	Status         string
+	Page           int
+	Limit          int
+	PrevPage       int
+	NextPage       int
 }
 
 type customerRow struct {
@@ -157,6 +163,14 @@ func (a *app) dashboard(w http.ResponseWriter, r *http.Request) {
 	if target == "" {
 		target = "postgres"
 	}
+	search := strings.TrimSpace(r.URL.Query().Get("q"))
+	status := strings.TrimSpace(r.URL.Query().Get("status"))
+	page := parsePositiveInt(r.URL.Query().Get("page"), 1)
+	limit := parsePositiveInt(r.URL.Query().Get("limit"), 20)
+	if limit > 100 {
+		limit = 100
+	}
+	offset := (page - 1) * limit
 
 	data := dashboardData{
 		Now:           time.Now().Format(time.RFC3339),
@@ -165,18 +179,68 @@ func (a *app) dashboard(w http.ResponseWriter, r *http.Request) {
 		GeneratorURL:  a.generatorURL,
 		ClickhouseURL: a.clickhouseURL,
 		Query:         defaultQuery,
+		Search:        search,
+		Status:        status,
+		Page:          page,
+		Limit:         limit,
+		PrevPage:      max(1, page-1),
+		NextPage:      page + 1,
 	}
 
 	a.loadSummary(&data)
 
 	db := a.dbForTarget(target)
 	if db != nil {
-		_ = db.SelectContext(r.Context(), &data.Customers, "SELECT id, name, email, city FROM customers ORDER BY id DESC LIMIT 10")
-		_ = db.SelectContext(r.Context(), &data.Products, "SELECT id, name, category, price, stock FROM products ORDER BY id DESC LIMIT 10")
-		_ = db.SelectContext(r.Context(), &data.Orders, "SELECT id, customer_id, status, total_amount FROM orders ORDER BY id DESC LIMIT 10")
+		if err := a.loadCustomers(r.Context(), db, target, &data, limit, offset); err != nil {
+			data.Error = appendErr(data.Error, fmt.Sprintf("customers: %v", err))
+		}
+		if err := a.loadProducts(r.Context(), db, target, &data, limit, offset); err != nil {
+			data.Error = appendErr(data.Error, fmt.Sprintf("products: %v", err))
+		}
+		if err := a.loadOrders(r.Context(), db, target, &data, limit, offset); err != nil {
+			data.Error = appendErr(data.Error, fmt.Sprintf("orders: %v", err))
+		}
 	}
 
 	render(w, data)
+}
+
+func (a *app) loadCustomers(ctx context.Context, db *sqlx.DB, target string, data *dashboardData, limit, offset int) error {
+	like := "%" + data.Search + "%"
+	if strings.ToLower(target) == "mysql" {
+		return db.SelectContext(ctx, &data.Customers, "SELECT id, name, email, city FROM customers WHERE (? = '' OR name LIKE ? OR email LIKE ? OR city LIKE ?) ORDER BY id DESC LIMIT ? OFFSET ?", data.Search, like, like, like, limit, offset)
+	}
+	return db.SelectContext(ctx, &data.Customers, "SELECT id, name, email, city FROM customers WHERE ($1 = '' OR name ILIKE $2 OR email ILIKE $2 OR city ILIKE $2) ORDER BY id DESC LIMIT $3 OFFSET $4", data.Search, like, limit, offset)
+}
+
+func (a *app) loadProducts(ctx context.Context, db *sqlx.DB, target string, data *dashboardData, limit, offset int) error {
+	like := "%" + data.Search + "%"
+	if strings.ToLower(target) == "mysql" {
+		return db.SelectContext(ctx, &data.Products, "SELECT id, name, category, price, stock FROM products WHERE (? = '' OR name LIKE ? OR category LIKE ?) ORDER BY id DESC LIMIT ? OFFSET ?", data.Search, like, like, limit, offset)
+	}
+	return db.SelectContext(ctx, &data.Products, "SELECT id, name, category, price, stock FROM products WHERE ($1 = '' OR name ILIKE $2 OR category ILIKE $2) ORDER BY id DESC LIMIT $3 OFFSET $4", data.Search, like, limit, offset)
+}
+
+func (a *app) loadOrders(ctx context.Context, db *sqlx.DB, target string, data *dashboardData, limit, offset int) error {
+	if strings.ToLower(target) == "mysql" {
+		return db.SelectContext(ctx, &data.Orders, "SELECT id, customer_id, status, total_amount FROM orders WHERE (? = '' OR status = ?) ORDER BY id DESC LIMIT ? OFFSET ?", data.Status, data.Status, limit, offset)
+	}
+	return db.SelectContext(ctx, &data.Orders, "SELECT id, customer_id, status, total_amount FROM orders WHERE ($1 = '' OR status = $1) ORDER BY id DESC LIMIT $2 OFFSET $3", data.Status, limit, offset)
+}
+
+func parsePositiveInt(raw string, fallback int) int {
+	n, err := strconv.Atoi(raw)
+	if err != nil || n < 1 {
+		return fallback
+	}
+	return n
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
 
 func (a *app) generatorAction(path string) http.HandlerFunc {
@@ -393,7 +457,9 @@ var page = template.Must(template.New("page").Parse(`<!doctype html>
     th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #1e293b; font-size: 14px; }
     th { color: #94a3b8; }
     input, select { background: #020617; border: 1px solid #334155; color: #fff; padding: 8px 10px; border-radius: 8px; margin-right: 8px; }
-    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
+    .pager { display: flex; gap: 8px; align-items: center; margin-top: 14px; }
+    .filters { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
@@ -447,6 +513,13 @@ var page = template.Must(template.New("page").Parse(`<!doctype html>
         <button>Add Customer</button>
       </form>
     </div>
+    <form class="filters" method="get" action="/">
+      <input type="hidden" name="tab" value="customers">
+      <input type="hidden" name="target" value="{{.Target}}">
+      <input type="text" name="q" value="{{.Search}}" placeholder="Search name/email/city">
+      <input type="number" name="limit" value="{{.Limit}}" min="1" max="100" style="width:90px">
+      <button>Search</button>
+    </form>
     <table>
       <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>City</th></tr></thead>
       <tbody>
@@ -457,6 +530,11 @@ var page = template.Must(template.New("page").Parse(`<!doctype html>
       {{end}}
       </tbody>
     </table>
+    <div class="pager">
+      <a class="linkbtn" href="/?tab=customers&target={{.Target}}&q={{.Search}}&limit={{.Limit}}&page={{.PrevPage}}">Prev</a>
+      <span class="muted">Page {{.Page}}</span>
+      <a class="linkbtn" href="/?tab=customers&target={{.Target}}&q={{.Search}}&limit={{.Limit}}&page={{.NextPage}}">Next</a>
+    </div>
   </section>
   {{end}}
 
@@ -473,6 +551,13 @@ var page = template.Must(template.New("page").Parse(`<!doctype html>
         <button>Add Product</button>
       </form>
     </div>
+    <form class="filters" method="get" action="/">
+      <input type="hidden" name="tab" value="products">
+      <input type="hidden" name="target" value="{{.Target}}">
+      <input type="text" name="q" value="{{.Search}}" placeholder="Search name/category">
+      <input type="number" name="limit" value="{{.Limit}}" min="1" max="100" style="width:90px">
+      <button>Search</button>
+    </form>
     <table>
       <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr></thead>
       <tbody>
@@ -483,12 +568,33 @@ var page = template.Must(template.New("page").Parse(`<!doctype html>
       {{end}}
       </tbody>
     </table>
+    <div class="pager">
+      <a class="linkbtn" href="/?tab=products&target={{.Target}}&q={{.Search}}&limit={{.Limit}}&page={{.PrevPage}}">Prev</a>
+      <span class="muted">Page {{.Page}}</span>
+      <a class="linkbtn" href="/?tab=products&target={{.Target}}&q={{.Search}}&limit={{.Limit}}&page={{.NextPage}}">Next</a>
+    </div>
   </section>
   {{end}}
 
   {{if eq .Tab "orders"}}
   <section class="card">
-    <h2>Recent Orders ({{.Target}})</h2>
+    <div class="toolbar">
+      <h2>Recent Orders ({{.Target}})</h2>
+      <form class="filters" method="get" action="/">
+        <input type="hidden" name="tab" value="orders">
+        <input type="hidden" name="target" value="{{.Target}}">
+        <select name="status">
+          <option value="">All Status</option>
+          <option value="PLACED" {{if eq .Status "PLACED"}}selected{{end}}>PLACED</option>
+          <option value="PAID" {{if eq .Status "PAID"}}selected{{end}}>PAID</option>
+          <option value="SHIPPED" {{if eq .Status "SHIPPED"}}selected{{end}}>SHIPPED</option>
+          <option value="DELIVERED" {{if eq .Status "DELIVERED"}}selected{{end}}>DELIVERED</option>
+          <option value="CANCELLED" {{if eq .Status "CANCELLED"}}selected{{end}}>CANCELLED</option>
+        </select>
+        <input type="number" name="limit" value="{{.Limit}}" min="1" max="100" style="width:90px">
+        <button>Filter</button>
+      </form>
+    </div>
     <table>
       <thead><tr><th>ID</th><th>Customer ID</th><th>Status</th><th>Total Amount</th><th>Action</th></tr></thead>
       <tbody>
@@ -515,6 +621,11 @@ var page = template.Must(template.New("page").Parse(`<!doctype html>
       {{end}}
       </tbody>
     </table>
+    <div class="pager">
+      <a class="linkbtn" href="/?tab=orders&target={{.Target}}&status={{.Status}}&limit={{.Limit}}&page={{.PrevPage}}">Prev</a>
+      <span class="muted">Page {{.Page}}</span>
+      <a class="linkbtn" href="/?tab=orders&target={{.Target}}&status={{.Status}}&limit={{.Limit}}&page={{.NextPage}}">Next</a>
+    </div>
   </section>
   {{end}}
 
