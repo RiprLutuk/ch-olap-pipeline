@@ -1,0 +1,20 @@
+{
+  "name": "oracle-source",
+  "config": {
+    "connector.class": "io.debezium.connector.oracle.OracleConnector",
+    "database.hostname": "${ORACLE_HOST}",
+    "database.port": "${ORACLE_PORT}",
+    "database.user": "${ORACLE_USER}",
+    "database.password": "${ORACLE_PASSWORD}",
+    "database.dbname": "${ORACLE_SID}",
+    "database.pdb.name": "${ORACLE_PDB:-}",
+    "topic.prefix": "${TOPIC_PREFIX}",
+    "schema.include.list": "${ORACLE_SCHEMA}",
+    "table.include.list": "${ORACLE_TABLE_INCLUDE}",
+    "include.schema.changes": "false",
+    "log.mining.strategy": "online_catalog",
+    "log.mining.archive.log.hours": "24",
+    "heartbeat.interval.ms": "10000",
+    "database.url": "jdbc:oracle:thin:@${ORACLE_HOST}:${ORACLE_PORT}:${ORACLE_SID}"
+  }
+}

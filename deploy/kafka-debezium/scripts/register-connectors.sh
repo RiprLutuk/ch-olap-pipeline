@@ -7,6 +7,13 @@ CONNECT_DIR="$ROOT_DIR/connectors"
 CONNECT_URL="${CONNECT_URL:-http://127.0.0.1:${HOST_CONNECT_PORT:-8083}}"
 DRY_RUN="${DRY_RUN:-0}"
 
+required_env=(
+  TOPIC_PREFIX
+  PG_HOST PG_PORT PG_USER PG_PASSWORD PG_DB PG_TABLE_INCLUDE
+  MYSQL_HOST MYSQL_PORT MYSQL_USER MYSQL_PASSWORD MYSQL_DB MYSQL_TABLE_INCLUDE
+  MSSQL_HOST MSSQL_PORT MSSQL_USER MSSQL_PASSWORD MSSQL_DB MSSQL_TABLE_INCLUDE
+)
+
 if ! command -v curl >/dev/null 2>&1; then
   echo "error: curl is required" >&2
   exit 1
@@ -14,6 +21,25 @@ fi
 
 if ! command -v envsubst >/dev/null 2>&1; then
   echo "error: envsubst is required (gettext-base / gettext)" >&2
+  exit 1
+fi
+
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "error: python3 is required for json validation" >&2
+  exit 1
+fi
+
+missing=()
+for name in "${required_env[@]}"; do
+  if [ -z "${!name:-}" ]; then
+    missing+=("$name")
+  fi
+done
+
+if [ ${#missing[@]} -gt 0 ]; then
+  echo "error: required environment variables are missing or empty:" >&2
+  printf '  - %s\n' "${missing[@]}" >&2
+  echo "hint: copy .env.example to .env, fill it, then run: set -a; source .env; set +a" >&2
   exit 1
 fi
 
@@ -48,4 +74,4 @@ for f in "${files[@]}"; do
     --data @-
   echo
   echo
- done
+done

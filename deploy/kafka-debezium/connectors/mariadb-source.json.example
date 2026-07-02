@@ -1,0 +1,16 @@
+{
+  "name": "mariadb-source",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "database.hostname": "${MARIADB_HOST}",
+    "database.port": "${MARIADB_PORT}",
+    "database.user": "${MARIADB_USER}",
+    "database.password": "${MARIADB_PASSWORD}",
+    "database.server.id": "5402",
+    "database.include.list": "${MARIADB_DB}",
+    "topic.prefix": "${TOPIC_PREFIX}",
+    "table.include.list": "${MARIADB_TABLE_INCLUDE}",
+    "include.schema.changes": "false",
+    "heartbeat.interval.ms": "10000"
+  }
+}
