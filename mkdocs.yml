@@ -1,0 +1,25 @@
+site_name: ch-olap-pipeline
+site_description: Universal OLTP to OLAP CDC pipeline with Debezium, Kafka, and ClickHouse
+site_url: https://riprlutuk.github.io/ch-olap-pipeline/
+repo_url: https://github.com/RiprLutuk/ch-olap-pipeline
+repo_name: RiprLutuk/ch-olap-pipeline
+
+theme:
+  name: mkdocs
+
+nav:
+  - Home: index.md
+  - Open Source Vision: open-source-vision.md
+  - Supported RDBMS Matrix: supported-rdbms-matrix.md
+  - Architecture Decisions: architecture-decisions.md
+  - Adapters:
+      - PostgreSQL: adapters/postgres-source.md
+      - MySQL: adapters/mysql-source.md
+      - SQL Server: adapters/sqlserver-source.md
+      - Oracle: adapters/oracle-source.md
+      - MariaDB: adapters/mariadb-source.md
+
+markdown_extensions:
+  - tables
+  - toc:
+      permalink: true

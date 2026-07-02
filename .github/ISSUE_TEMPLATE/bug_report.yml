@@ -1,0 +1,86 @@
+name: Bug report
+description: Report a reproducible bug or operational failure
+title: "bug: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please provide enough detail for maintainers to reproduce it.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+      placeholder: Describe the bug clearly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, RAM, Docker/Podman version, source DB version, ClickHouse version.
+      placeholder: |
+        OS: Ubuntu 24.04
+        RAM: 8GB
+        Runtime: podman compose v...
+        Source DB: PostgreSQL 16
+        ClickHouse: 24.x
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands, config snippets, and data needed.
+      placeholder: |
+        1. Run ...
+        2. Register connector ...
+        3. Insert row ...
+        4. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior / logs
+      description: Paste relevant logs, connector status, Kafka topic output, or ClickHouse query output.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: cdc
+    attributes:
+      label: CDC state (if relevant)
+      description: Last known LSN / binlog position / connector offsets / lag.
+      placeholder: |
+        last_lsn: ...
+        binlog_file: ...
+        binlog_pos: ...
+        debezium lag: ...
+        clickhouse latest event: ...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and did not find a duplicate.
+          required: true
+        - label: I removed or redacted credentials and secrets from logs.
+          required: true

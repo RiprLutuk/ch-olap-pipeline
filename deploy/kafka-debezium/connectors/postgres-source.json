@@ -1,0 +1,17 @@
+{
+  "name": "postgres-source",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "${PG_HOST}",
+    "database.port": "${PG_PORT}",
+    "database.user": "${PG_USER}",
+    "database.password": "${PG_PASSWORD}",
+    "database.dbname": "${PG_DB}",
+    "topic.prefix": "${TOPIC_PREFIX}",
+    "slot.name": "debezium_pg_slot",
+    "publication.autocreate.mode": "filtered",
+    "plugin.name": "pgoutput",
+    "table.include.list": "${PG_TABLE_INCLUDE}",
+    "include.schema.changes": "false"
+  }
+}
