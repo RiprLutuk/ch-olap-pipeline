@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/RiprLutuk/ch-olap-pipeline/security/policy
+    about: Please report security vulnerabilities privately, not via public issues.
+  - name: Architecture discussion
+    url: https://github.com/RiprLutuk/ch-olap-pipeline/discussions
+    about: Use discussions for design proposals and longer architecture debates.
