@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://riprlutuk.github.io/ch-olap-pipeline/system-overview/">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>System Overview - CH OLAP Pipeline</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">CH OLAP Pipeline</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../open-source-vision/" class="nav-link">Vision</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">System Overview</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../architecture-decisions/" class="nav-link">Architecture Decisions</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../supported-rdbms-matrix/" class="nav-link">Sources</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../sinks-matrix/" class="nav-link">Sinks</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Source Adapters</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../adapters/postgres-source/" class="dropdown-item">PostgreSQL</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/mysql-source/" class="dropdown-item">MySQL</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/mariadb-source/" class="dropdown-item">MariaDB</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/sqlserver-source/" class="dropdown-item">SQL Server</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/oracle-source/" class="dropdown-item">Oracle</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/db2-source/" class="dropdown-item">Db2</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/cockroachdb-source/" class="dropdown-item">CockroachDB</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/yugabyte-source/" class="dropdown-item">YugabyteDB</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/vitess-source/" class="dropdown-item">Vitess</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/mongodb-source/" class="dropdown-item">MongoDB</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/sqlite-source/" class="dropdown-item">SQLite</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/firebird-source/" class="dropdown-item">Firebird</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/sap-hana-source/" class="dropdown-item">SAP HANA</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/kafka-source/" class="dropdown-item">Kafka-native</a>
+</li>
+                                    
+<li>
+    <a href="../adapters/rest-source/" class="dropdown-item">REST/Webhook</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Sink Targets</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../sinks/clickhouse-sink/" class="dropdown-item">ClickHouse</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/kafka-sink/" class="dropdown-item">Kafka</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/s3-sink/" class="dropdown-item">S3</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/iceberg-sink/" class="dropdown-item">Iceberg</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/delta-sink/" class="dropdown-item">Delta</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/bigquery-sink/" class="dropdown-item">BigQuery</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/snowflake-sink/" class="dropdown-item">Snowflake</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/redshift-sink/" class="dropdown-item">Redshift</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/postgres-sink/" class="dropdown-item">PostgreSQL</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/mysql-sink/" class="dropdown-item">MySQL</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/elasticsearch-sink/" class="dropdown-item">Elasticsearch</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/opensearch-sink/" class="dropdown-item">OpenSearch</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/duckdb-sink/" class="dropdown-item">DuckDB</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/parquet-sink/" class="dropdown-item">Parquet</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/webhook-sink/" class="dropdown-item">Webhook</a>
+</li>
+                                    
+<li>
+    <a href="../sinks/rabbitmq-sink/" class="dropdown-item">RabbitMQ</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../open-source-vision/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../architecture-decisions/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://github.com/RiprLutuk/ch-olap-pipeline/edit/master/docs/system-overview.md" class="nav-link">Edit on RiprLutuk/ch-olap-pipeline
+                                    </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#system-overview" class="nav-link">System Overview</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#simple-summary" class="nav-link">Simple summary</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#main-data-flow" class="nav-link">Main data flow</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#main-components" class="nav-link">Main components</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#deployment-modes" class="nav-link">Deployment modes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#a-learning-local-lab-mode" class="nav-link">A. Learning / local lab mode</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#b-small-vps-mode" class="nav-link">B. Small VPS mode</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#c-proper-lab-production-like-mode" class="nav-link">C. Proper lab / production-like mode</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#what-the-repo-promises-today" class="nav-link">What the repo promises today</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#current-opinionated-path" class="nav-link">Current opinionated path</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#how-to-read-the-docs" class="nav-link">How to read the docs</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#future-product-direction" class="nav-link">Future product direction</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="system-overview">System Overview</h1>
+<p>This document explains the project architecture in a more human-friendly way than the ADRs.</p>
+<p>If the ADRs answer <strong>why</strong>, this page answers <strong>what is here</strong> and <strong>how the parts fit together</strong>.</p>
+<h2 id="simple-summary">Simple summary</h2>
+<p><code>ch-olap-pipeline</code> is a reference architecture for moving data changes from OLTP systems into ClickHouse using CDC.</p>
+<p>In plain language:</p>
+<ol>
+<li>a source database changes</li>
+<li>a CDC connector captures the change</li>
+<li>Kafka carries the event stream</li>
+<li>ClickHouse consumes the stream</li>
+<li>analytics tables become queryable</li>
+</ol>
+<h2 id="main-data-flow">Main data flow</h2>
+<pre><code class="language-text">Source DB / API
+      ↓
+Debezium / Kafka Connect
+      ↓
+Kafka topics
+      ↓
+ClickHouse Kafka Engine
+      ↓
+Materialized Views
+      ↓
+Analytics tables
+</code></pre>
+<h2 id="main-components">Main components</h2>
+<h3 id="1-source-systems">1. Source systems</h3>
+<p>These are the operational systems where data is created or updated.</p>
+<p>Examples:</p>
+<ul>
+<li>PostgreSQL</li>
+<li>MySQL</li>
+<li>SQL Server</li>
+<li>Oracle</li>
+<li>other future adapters</li>
+</ul>
+<p>The source side should stay OLTP-safe. That means:</p>
+<ul>
+<li>low-privilege users</li>
+<li>replication-safe settings</li>
+<li>no destructive requirements on the source database</li>
+</ul>
+<h3 id="2-cdc-capture-layer">2. CDC capture layer</h3>
+<p>This layer watches changes from the source system.</p>
+<p>For the primary path in this repo, that usually means:</p>
+<ul>
+<li>Debezium source connector</li>
+<li>Kafka Connect runtime</li>
+</ul>
+<p>This is what turns database changes into structured events.</p>
+<h3 id="3-kafka-event-bus">3. Kafka event bus</h3>
+<p>Kafka acts as the durable event stream between source capture and analytical storage.</p>
+<p>Kafka is useful because it gives:</p>
+<ul>
+<li>replayability</li>
+<li>buffering</li>
+<li>decoupling between source and sink</li>
+<li>visibility into streamed events</li>
+</ul>
+<p>But Kafka is also one of the heavier parts of the stack, especially on low-memory machines.</p>
+<h3 id="4-clickhouse-sink">4. ClickHouse sink</h3>
+<p>ClickHouse is the first-class analytical target in this repository.</p>
+<p>Why ClickHouse:</p>
+<ul>
+<li>very good ingestion throughput</li>
+<li>strong fit for analytical queries</li>
+<li>self-hostable</li>
+<li>practical for infra/data teams</li>
+</ul>
+<p>The main pattern is:</p>
+<ul>
+<li>Kafka topic receives CDC events</li>
+<li>ClickHouse Kafka Engine reads them</li>
+<li>Materialized Views transform them</li>
+<li>final analytical tables store queryable data</li>
+</ul>
+<h2 id="deployment-modes">Deployment modes</h2>
+<h2 id="a-learning-local-lab-mode">A. Learning / local lab mode</h2>
+<p>Best for:</p>
+<ul>
+<li>learning the architecture</li>
+<li>testing a single source</li>
+<li>validating configs</li>
+</ul>
+<p>Typical environment:</p>
+<ul>
+<li>laptop</li>
+<li>local VM</li>
+<li>dedicated lab machine</li>
+</ul>
+<p>This is the best place to run the full stack first.</p>
+<h2 id="b-small-vps-mode">B. Small VPS mode</h2>
+<p>Best for:</p>
+<ul>
+<li>documentation hosting</li>
+<li>lightweight control plane</li>
+<li>demos that keep heavy components elsewhere</li>
+</ul>
+<p>Important note:</p>
+<p>A tiny VPS around 1GB RAM is usually <strong>not</strong> the right place for a full Kafka + Connect + Debezium + ClickHouse stack.</p>
+<p>On small hosts, the realistic pattern is:</p>
+<ul>
+<li>keep heavy streaming components external</li>
+<li>use the VPS for light services, docs, dashboards, or app control surfaces</li>
+</ul>
+<h2 id="c-proper-lab-production-like-mode">C. Proper lab / production-like mode</h2>
+<p>Best for:</p>
+<ul>
+<li>realistic end-to-end tests</li>
+<li>multiple topics / larger datasets</li>
+<li>production-style learning</li>
+</ul>
+<p>Typical target:</p>
+<ul>
+<li>4–8GB RAM lab host or bigger</li>
+<li>separate services or separate nodes if scaling up</li>
+</ul>
+<h2 id="what-the-repo-promises-today">What the repo promises today</h2>
+<p>This repository currently promises more strongly in these areas:</p>
+<ul>
+<li>architecture direction</li>
+<li>docs and decision records</li>
+<li>connector/sink structure</li>
+<li>community contribution path</li>
+<li>security-minded defaults</li>
+</ul>
+<p>It currently promises less strongly in these areas:</p>
+<ul>
+<li>finished beginner UI</li>
+<li>plug-and-play product experience</li>
+<li>production-hardened implementation for every listed adapter</li>
+</ul>
+<p>That distinction matters. The project is meant to be honest, not hype-driven.</p>
+<h2 id="current-opinionated-path">Current opinionated path</h2>
+<p>If you want the cleanest starting point, think of the project like this:</p>
+<ul>
+<li>start with <strong>one source</strong>: PostgreSQL, MySQL, or SQL Server</li>
+<li>use <strong>Debezium + Kafka Connect</strong> for CDC</li>
+<li>use <strong>Kafka</strong> as the event bus</li>
+<li>land the data in <strong>ClickHouse</strong></li>
+</ul>
+<p>That path should be the easiest one to understand, document, and improve first.</p>
+<h2 id="how-to-read-the-docs">How to read the docs</h2>
+<p>Recommended order:</p>
+<ol>
+<li><code>docs/index.md</code></li>
+<li><code>docs/system-overview.md</code></li>
+<li><code>docs/architecture-decisions.md</code></li>
+<li><code>docs/supported-rdbms-matrix.md</code></li>
+<li>specific adapter docs under <code>docs/adapters/</code></li>
+<li>sink docs under <code>docs/sinks/</code></li>
+</ol>
+<h2 id="future-product-direction">Future product direction</h2>
+<p>If the project becomes more beginner-friendly over time, the likely next step is:</p>
+<ul>
+<li>a simpler config format</li>
+<li>a guided CLI or setup wizard</li>
+<li>clearer quick-start flows for PostgreSQL/MySQL/SQL Server to ClickHouse</li>
+</ul>
+<p>That is the practical path from <strong>reference architecture</strong> to <strong>easy-to-use tool</strong>.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
