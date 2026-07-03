@@ -1,5 +1,6 @@
 site_name: CH OLAP Pipeline
 site_description: Community OLTP to OLAP pipeline for DBA, infra, and data-platform engineers.
+site_url: https://riprlutuk.github.io/ch-olap-pipeline/
 repo_url: https://github.com/RiprLutuk/ch-olap-pipeline
 repo_name: RiprLutuk/ch-olap-pipeline
 theme:
