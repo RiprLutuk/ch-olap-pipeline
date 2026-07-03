@@ -7,6 +7,7 @@ theme:
 nav:
   - Home: index.md
   - Vision: open-source-vision.md
+  - System Overview: system-overview.md
   - Architecture Decisions: architecture-decisions.md
   - Sources: supported-rdbms-matrix.md
   - Sinks: sinks-matrix.md
