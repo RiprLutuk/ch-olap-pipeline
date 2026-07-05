@@ -1,0 +1,280 @@
+/* CH OLAP Pipeline docs polish */
+
+:root {
+  --ch-accent: #d97706;
+  --ch-accent-dark: #b45309;
+  --ch-ink: #111827;
+  --ch-muted: #4b5563;
+  --ch-border: #e5e7eb;
+  --ch-surface: #ffffff;
+  --ch-soft: #f8fafc;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--ch-ink);
+}
+
+body.homepage .container .col-md-9[role="main"] {
+  max-width: 900px;
+}
+
+body.homepage h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.75rem;
+}
+
+body.homepage h1 + p,
+body.homepage blockquote {
+  font-size: 1.08rem;
+  color: var(--ch-muted);
+}
+
+blockquote {
+  border-left: 4px solid var(--ch-accent);
+  background: #fffaf0;
+  padding: 0.9rem 1rem;
+  border-radius: 0 10px 10px 0;
+}
+
+h2 {
+  margin-top: 2.3rem;
+  padding-top: 0.2rem;
+  font-size: 1.6rem;
+}
+
+h3 {
+  margin-top: 1.5rem;
+  font-size: 1.15rem;
+}
+
+p,
+li {
+  line-height: 1.75;
+}
+
+ul li + li,
+ol li + li {
+  margin-top: 0.35rem;
+}
+
+code,
+pre code {
+  font-size: 0.93em;
+}
+
+pre {
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--ch-border);
+  background: #0f172a;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+pre code {
+  color: #e5edf8;
+}
+
+table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 1rem 0 1.25rem;
+}
+
+table th,
+table td {
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+table th {
+  background: #f8fafc;
+}
+
+.navbar {
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.bg-primary {
+  background-color: #111827 !important;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus,
+.navbar-dark .navbar-nav .active > .nav-link,
+.navbar-dark .navbar-nav .nav-link.active {
+  color: #fff;
+}
+
+.bs-sidebar .nav > li > a {
+  border-radius: 10px;
+  margin-bottom: 0.2rem;
+}
+
+.bs-sidebar .nav > li > a:hover,
+.bs-sidebar .nav > li.active > a {
+  background: #fff7ed;
+  color: var(--ch-accent-dark);
+}
+
+a {
+  color: var(--ch-accent-dark);
+}
+
+a:hover,
+a:focus {
+  color: var(--ch-accent);
+}
+
+hr {
+  margin: 2rem 0;
+  border-top: 1px solid var(--ch-border);
+}
+
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    padding-top: 0.6rem;
+    gap: 0.1rem;
+  }
+
+  .navbar-dark .navbar-nav .nav-link,
+  .dropdown-item {
+    white-space: normal;
+    line-height: 1.45;
+  }
+
+  body.homepage h1 {
+    font-size: 2rem;
+  }
+
+  body.homepage .container .col-md-9[role="main"] {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .container,
+  .col-md-9[role="main"],
+  .col-md-3 {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+  }
+
+  pre {
+    padding: 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  table {
+    font-size: 0.94rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ch-ink: #e5e7eb;
+    --ch-muted: #cbd5e1;
+    --ch-border: #243041;
+    --ch-surface: #0f172a;
+    --ch-soft: #111827;
+  }
+
+  body {
+    background: #0b1120;
+    color: var(--ch-ink);
+  }
+
+  .container,
+  .dropdown-menu,
+  .bs-sidebar .well,
+  .table,
+  .admonition,
+  .toc,
+  .well {
+    background-color: var(--ch-surface);
+    color: var(--ch-ink);
+  }
+
+  .col-md-9[role="main"] {
+    background: transparent;
+  }
+
+  blockquote {
+    background: rgba(217, 119, 6, 0.12);
+    color: var(--ch-ink);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #f8fafc;
+  }
+
+  p, li {
+    color: var(--ch-ink);
+  }
+
+  .bg-primary {
+    background-color: #020617 !important;
+  }
+
+  .bs-sidebar .nav > li > a:hover,
+  .bs-sidebar .nav > li.active > a {
+    background: rgba(217, 119, 6, 0.12);
+    color: #fbbf24;
+  }
+
+  .dropdown-menu {
+    border-color: var(--ch-border);
+  }
+
+  .dropdown-item {
+    color: var(--ch-ink);
+  }
+
+  .dropdown-item:hover,
+  .dropdown-item:focus {
+    background: #172033;
+    color: #fff;
+  }
+
+  table th {
+    background: #111827;
+  }
+
+  table td,
+  table th {
+    border-color: var(--ch-border) !important;
+  }
+
+  a {
+    color: #fbbf24;
+  }
+
+  a:hover,
+  a:focus {
+    color: #fdba74;
+  }
+
+  hr {
+    border-top-color: var(--ch-border);
+  }
+}
